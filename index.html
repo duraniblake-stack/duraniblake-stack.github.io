@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Durani Blake | Finance & Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080A0E;
+    --navy: #0B1120;
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --white: #F2F4F8;
+    --muted: #7A8499;
+    --border: rgba(201,168,76,0.2);
+    --card: rgba(11,17,32,0.85);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* GRID BACKGROUND */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(8,10,14,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  #hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 4rem;
+    overflow: hidden;
+  }
+
+  .hero-accent {
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-accent-2 {
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-content { max-width: 800px; }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.35s;
+  }
+
+  .hero-name span { color: var(--gold); }
+
+  .hero-title {
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+    max-width: 550px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.5s;
+  }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.65s;
+  }
+
+  .badge {
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.9rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+    background: var(--gold-dim);
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.8s;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* TICKER */
+  .ticker-wrap {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(201,168,76,0.04);
+    overflow: hidden;
+    padding: 0.65rem 0;
+  }
+
+  .ticker {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 28s linear infinite;
+  }
+
+  .ticker-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding: 0 2.5rem;
+  }
+
+  .ticker-sep { color: var(--muted); }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 4rem;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 3rem;
+  }
+
+  /* ABOUT */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p strong { color: var(--white); font-weight: 500; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    background: var(--card);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .stat-card:hover::before { transform: scaleX(1); }
+  .stat-card:hover { border-color: rgba(201,168,76,0.4); }
+
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* SKILLS */
+  #skills { background: rgba(11,17,32,0.4); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .skill-group {
+    border: 1px solid var(--border);
+    padding: 2rem;
+    background: var(--card);
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .skill-group:hover {
+    border-color: rgba(201,168,76,0.35);
+    transform: translateY(-4px);
+  }
+
+  .skill-group-icon {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .skill-group-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .skill-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 0.25rem 0.65rem;
+  }
+
+  /* EXPERIENCE */
+  .timeline { position: relative; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+
+  .timeline-item {
+    padding-left: 2.5rem;
+    margin-bottom: 3.5rem;
+    position: relative;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -4px; top: 6px;
+    width: 9px; height: 9px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(201,168,76,0.5);
+  }
+
+  .timeline-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-role {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+  }
+
+  .timeline-org {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .timeline-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timeline-bullets li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding-left: 1rem;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .timeline-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.7rem;
+  }
+
+  /* PROJECTS */
+  #projects { background: rgba(11,17,32,0.4); }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    border: 1px solid var(--border);
+    padding: 2rem;
+    background: var(--card);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+
+  .project-card:hover::after { transform: scaleX(1); }
+  .project-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-4px); }
+
+  .project-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: rgba(201,168,76,0.1);
+    line-height: 1;
+    position: absolute;
+    top: 1rem; right: 1.5rem;
+  }
+
+  .project-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+    color: var(--white);
+  }
+
+  .project-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    flex: 1;
+  }
+
+  .project-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .project-highlight {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.55rem;
+  }
+
+  /* CONTACT */
+  #contact {
+    text-align: center;
+    padding: 6rem 4rem 5rem;
+  }
+
+  #contact .section-label,
+  #contact .section-title { text-align: center; }
+
+  .contact-sub {
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 3rem;
+    font-size: 0.95rem;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.8rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: border-color 0.25s, color 0.25s, background 0.25s;
+  }
+
+  .contact-link:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 4rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 2rem; }
+    section { padding: 4rem 2rem; }
+    #hero { padding: 0 2rem; }
+    #about .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; }
+    .divider { margin: 0 2rem; }
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    #contact { padding: 4rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">DB</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-accent"></div>
+  <div class="hero-accent-2"></div>
+  <div class="hero-content">
+    <p class="hero-tag">Finance &amp; Analytics Professional</p>
+    <h1 class="hero-name">Durani<br><span>Blake</span></h1>
+    <p class="hero-title">MSc Finance · CFA Level I · Financial Modeling · Risk Analysis · Data Analytics · Bloomberg Certified</p>
+    <div class="hero-badges">
+      <span class="badge">Georgia State University</span>
+      <span class="badge">Sharpe Ratio 3.44</span>
+      <span class="badge">+18.4% Excess Return</span>
+      <span class="badge">S&amp;P 1500 Research</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Get in Touch</a>
+      <a href="#projects" class="btn-secondary">View Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">DCF Valuation <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">M&amp;A Analysis <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Risk Modeling <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Python &amp; SQL <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Bloomberg Terminal <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Power BI <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Portfolio Management <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Capital Structure <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CFA Level I <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Financial Data Analytics <span class="ticker-sep">◆</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">DCF Valuation <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">M&amp;A Analysis <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Risk Modeling <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Python &amp; SQL <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Bloomberg Terminal <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Power BI <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Portfolio Management <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Capital Structure <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CFA Level I <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">Financial Data Analytics <span class="ticker-sep">◆</span></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 / About</div>
+  <h2 class="section-title">Who I Am</h2>
+  <div class="about-grid fade-in">
+    <div class="about-text">
+      <p>I'm a <strong>finance professional with a dual background in engineering and financial analysis</strong>, combining quantitative rigor with strategic investment thinking. I hold an MSc in Finance from Georgia State University's J. Mack Robinson College of Business and have passed the CFA Level I exam.</p>
+      <p>My career bridges two disciplines: <strong>financial modeling and valuation</strong> from the finance world, and <strong>capital project analysis and infrastructure investment</strong> from my engineering background — giving me a uniquely analytical lens for evaluating risk, cash flows, and long-term value.</p>
+      <p>I thrive at the intersection of data, markets, and decision-making — whether it's building large-scale financial datasets, co-managing portfolios, or translating complex analysis into executive-ready insights.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-number">3.44</div>
+        <div class="stat-label">Sharpe Ratio — Hedge Fund Simulation</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">+18.4%</div>
+        <div class="stat-label">Excess Return on $250K Portfolio</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">25yr</div>
+        <div class="stat-label">S&amp;P 1500 Dataset Built &amp; Managed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">20%</div>
+        <div class="stat-label">OpEx Reduction via Asset Modeling</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 / Skills</div>
+  <h2 class="section-title">Core Expertise</h2>
+  <div class="skills-grid">
+    <div class="skill-group fade-in">
+      <div class="skill-group-icon">📊</div>
+      <div class="skill-group-title">Valuation &amp; Transaction</div>
+      <div class="skill-tags">
+        <span class="skill-tag">DCF Valuation</span>
+        <span class="skill-tag">M&amp;A Fundamentals</span>
+        <span class="skill-tag">Comparable Company Analysis</span>
+        <span class="skill-tag">Precedent Transactions</span>
+        <span class="skill-tag">Sensitivity Analysis</span>
+        <span class="skill-tag">Capital Structure</span>
+        <span class="skill-tag">Downside Risk Assessment</span>
+        <span class="skill-tag">LBO Modeling</span>
+      </div>
+    </div>
+    <div class="skill-group fade-in">
+      <div class="skill-group-icon">📈</div>
+      <div class="skill-group-title">Financial Modeling</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Cash Flow Forecasting</span>
+        <span class="skill-tag">Pro Forma Modeling</span>
+        <span class="skill-tag">NPV / IRR Analysis</span>
+        <span class="skill-tag">Regression Analysis</span>
+        <span class="skill-tag">Scenario Analysis</span>
+        <span class="skill-tag">Risk Exposure Modeling</span>
+        <span class="skill-tag">Derivatives &amp; Risk Mgmt</span>
+      </div>
+    </div>
+    <div class="skill-group fade-in">
+      <div class="skill-group-icon">🛠</div>
+      <div class="skill-group-title">Tools &amp; Technology</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Bloomberg Terminal</span>
+        <span class="skill-tag">Python (Pandas / NumPy)</span>
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">Excel (Advanced / VBA)</span>
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">Tableau</span>
+        <span class="skill-tag">PowerWorld Simulator</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">03 / Experience</div>
+  <h2 class="section-title">Work History</h2>
+  <div class="timeline fade-in">
+
+    <div class="timeline-item">
+      <div class="timeline-period">Aug 2024 – Dec 2025</div>
+      <div class="timeline-role">Graduate Research Assistant — Finance</div>
+      <div class="timeline-org">Georgia State University · Atlanta, GA</div>
+      <ul class="timeline-bullets">
+        <li>Built and managed a 25-year financial dataset (S&amp;P 1500, 1999–2024) using Python and SQL to support large-scale research on capital structure and risk exposure.</li>
+        <li>Developed DCF, regression, and risk-exposure models evaluating cash-flow durability, leverage, and long-term value creation.</li>
+        <li>Designed Power BI dashboards translating complex financial research into actionable insights for senior stakeholders.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-period">Jan 2021 – Dec 2023</div>
+      <div class="timeline-role">Electrical Engineer</div>
+      <div class="timeline-org">General Electrical Contractors Ltd. · Kingston, Jamaica</div>
+      <ul class="timeline-bullets">
+        <li>Led technical and financial evaluation of 15+ energy &amp; solar projects (~$2M), conducting ROI/NPV/IRR modeling to inform capital allocation decisions.</li>
+        <li>Performed lifecycle cost analysis and asset replacement modeling, reducing operating costs by 20% and optimizing long-term capital planning.</li>
+        <li>Presented technical-financial recommendations to C-suite executives, translating engineering metrics into strategic investment narratives.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="section-label" style="margin-top: 3rem;">Education</div>
+  <div class="timeline fade-in">
+    <div class="timeline-item">
+      <div class="timeline-period">Graduated Dec 2025 · GPA 3.5</div>
+      <div class="timeline-role">Master of Science in Finance</div>
+      <div class="timeline-org">Georgia State University, J. Mack Robinson College of Business · CFA Level I Passed</div>
+      <ul class="timeline-bullets">
+        <li>Focus: Financial Modeling &amp; Valuation, Advanced Corporate Finance, Derivatives &amp; Risk Management, Financial Data Analytics, AI &amp; ML in Finance.</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-period">Graduated Nov 2021</div>
+      <div class="timeline-role">BSc. Electrical Power Engineering</div>
+      <div class="timeline-org">University of the West Indies, Mona · Kingston, Jamaica</div>
+      <ul class="timeline-bullets">
+        <li>Focus: Renewable Energy Systems, Power Systems Analysis, Alternative Energy Integration, Engineering Management.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">04 / Projects</div>
+  <h2 class="section-title">Selected Work</h2>
+  <div class="projects-grid">
+
+    <div class="project-card fade-in">
+      <div class="project-number">01</div>
+      <div class="project-title">Hedge Fund Management Simulation</div>
+      <div class="project-desc">Co-managed a $250K multi-asset portfolio at Georgia State University, achieving an 18.4% excess return with a Sharpe Ratio of 3.44 through disciplined risk management, performance attribution, and strategic capital allocation.</div>
+      <div class="project-highlights">
+        <span class="project-highlight">Portfolio Management</span>
+        <span class="project-highlight">Sharpe 3.44</span>
+        <span class="project-highlight">+18.4% Excess Return</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-number">02</div>
+      <div class="project-title">Investment Banking Simulation — Bank of America</div>
+      <div class="project-desc">Evaluated acquisition viability through a full DCF valuation, sensitivity and scenario analysis, and exit multiple frameworks. Synthesized findings into a 10-slide investment committee presentation highlighting key risks, growth drivers, and transaction tradeoffs.</div>
+      <div class="project-highlights">
+        <span class="project-highlight">DCF Valuation</span>
+        <span class="project-highlight">M&amp;A Analysis</span>
+        <span class="project-highlight">Investment Committee</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-number">03</div>
+      <div class="project-title">Power Grid Modernization &amp; Distributed Energy</div>
+      <div class="project-desc">Modeled a 7 MW distributed generation system to identify infrastructure constraints and reliability risks. Recommended stability and capital upgrades that reduced voltage deviations by 20%, supporting infrastructure investment prioritization.</div>
+      <div class="project-highlights">
+        <span class="project-highlight">PowerWorld Simulator</span>
+        <span class="project-highlight">Capital Planning</span>
+        <span class="project-highlight">−20% Voltage Deviation</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">05 / Contact</div>
+  <h2 class="section-title">Let's Connect</h2>
+  <p class="contact-sub">Open to finance roles in investment banking, asset management, financial analytics, and related fields. Feel free to reach out.</p>
+  <div class="contact-links">
+    <a href="mailto:duraniblake@gmail.com" class="contact-link">
+      <span>✉</span> duraniblake@gmail.com
+    </a>
+    <a href="tel:7705600312" class="contact-link">
+      <span>📞</span> 770-560-0312
+    </a>
+    <a href="https://www.linkedin.com/in/durani-blake25" target="_blank" class="contact-link">
+      <span>in</span> LinkedIn
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Durani Blake</p>
+  <p>MSc Finance · CFA Level I · Georgia State University</p>
+</footer>
+
+<script>
+  // Intersection observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

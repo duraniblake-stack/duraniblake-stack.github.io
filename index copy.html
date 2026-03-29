@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Durani Blake — Finance & Analytics</title>
+
+<!-- LinkedIn / Open Graph meta tags for thumbnail -->
+<meta property="og:title" content="Durani Blake — Finance & Analytics Professional"/>
+<meta property="og:description" content="MSc Finance · CFA Level I · Bloomberg Certified. Financial modeling, DCF valuation, risk analytics, and portfolio management."/>
+<meta property="og:image" content="linkedin-thumbnail.svg"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="linkedin-thumbnail.svg"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #04050A;
+  --surface: #0C0E18;
+  --surface2: #111320;
+  --gold: #D4A843;
+  --gold2: #F0C96A;
+  --gold-glow: rgba(212,168,67,0.18);
+  --gold-border: rgba(212,168,67,0.22);
+  --white: #EEEEF2;
+  --grey: #6B7080;
+  --grey2: #9AA0B2;
+  --text: #C8CCD8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Instrument Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+#cursor {
+  position: fixed; width: 10px; height: 10px;
+  background: var(--gold); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  transition: width 0.2s, height 0.2s;
+}
+#cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid rgba(212,168,67,0.5); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: left 0.1s ease, top 0.1s ease, width 0.25s, height 0.25s, border-color 0.25s;
+}
+
+#bg-canvas { position: fixed; inset: 0; z-index: 0; opacity: 0.55; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.4rem 3.5rem;
+  transition: background 0.4s, border-color 0.4s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(4,5,10,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom-color: var(--gold-border);
+}
+.nav-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.06em; color: var(--white); }
+.nav-logo span { color: var(--gold); }
+.nav-center { display: flex; gap: 2rem; position: absolute; left: 50%; transform: translateX(-50%); }
+.nav-center a {
+  font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em;
+  color: var(--grey2); text-decoration: none; text-transform: uppercase;
+  transition: color 0.2s; position: relative;
+}
+.nav-center a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+  height: 1px; background: var(--gold); transform: scaleX(0); transition: transform 0.25s;
+}
+.nav-center a:hover { color: var(--white); }
+.nav-center a:hover::after { transform: scaleX(1); }
+.nav-right { display: flex; gap: 0.75rem; align-items: center; }
+.nav-social {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border: 1px solid var(--gold-border);
+  color: var(--grey2); text-decoration: none; font-size: 0.75rem; font-weight: 700;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.nav-social:hover { background: var(--gold-glow); border-color: var(--gold); color: var(--gold); }
+.nav-cta {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold); text-decoration: none; border: 1px solid var(--gold-border);
+  padding: 0.5rem 1.2rem; transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: var(--gold); color: var(--bg); }
+
+/* HERO */
+#hero {
+  position: relative; z-index: 1; min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; padding: 8rem 3.5rem 5rem; gap: 4rem; overflow: hidden;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 1.8rem;
+  opacity: 0; animation: slideUp 0.7s cubic-bezier(.16,1,.3,1) 0.2s forwards;
+}
+.eyebrow-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: blink 2s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.6)} }
+.hero-name {
+  font-family: 'Syne', sans-serif; font-size: clamp(3.5rem, 7vw, 7.5rem);
+  font-weight: 800; line-height: 0.95; letter-spacing: -0.02em; color: var(--white);
+  opacity: 0; animation: slideUp 0.8s cubic-bezier(.16,1,.3,1) 0.35s forwards;
+}
+.hero-name em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--gold); font-weight: 400; }
+.hero-desc {
+  margin-top: 2rem; font-size: 1rem; line-height: 1.75; color: var(--grey2); max-width: 480px;
+  opacity: 0; animation: slideUp 0.8s cubic-bezier(.16,1,.3,1) 0.5s forwards;
+}
+.hero-actions {
+  display: flex; gap: 1rem; margin-top: 2.5rem;
+  opacity: 0; animation: slideUp 0.8s cubic-bezier(.16,1,.3,1) 0.65s forwards;
+}
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 2rem; background: var(--gold); color: #04050A;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none; transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.btn-gold:hover { background: var(--gold2); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(212,168,67,0.35); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 2rem; border: 1px solid var(--gold-border); color: var(--grey2);
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none; transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+.hero-right {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  opacity: 0; animation: slideUp 0.9s cubic-bezier(.16,1,.3,1) 0.55s forwards;
+}
+.metric-card {
+  background: var(--surface); border: 1px solid var(--gold-border);
+  padding: 1.8rem 1.5rem; position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.metric-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--gold-glow), transparent 60%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.metric-card:hover { transform: translateY(-4px); border-color: rgba(212,168,67,0.45); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.metric-card:hover::before { opacity: 1; }
+.metric-icon { font-size: 1.3rem; margin-bottom: 0.8rem; }
+.metric-val { font-family: 'Syne', sans-serif; font-size: 2.3rem; font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 0.3rem; }
+.metric-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); }
+.metric-sub { font-size: 0.76rem; color: var(--grey2); margin-top: 0.35rem; }
+
+/* TICKER */
+.ticker-bar { position: relative; z-index: 1; overflow: hidden; border-top: 1px solid var(--gold-border); border-bottom: 1px solid var(--gold-border); padding: 0.7rem 0; background: rgba(212,168,67,0.03); }
+.ticker-track { display: flex; white-space: nowrap; animation: roll 32s linear infinite; }
+.ticker-item { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); padding: 0 2rem; }
+.t-dot { color: var(--grey); }
+@keyframes roll { to { transform: translateX(-50%); } }
+
+/* LAYOUT */
+section { position: relative; z-index: 1; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 3.5rem; }
+.section-wrap { padding: 7rem 0; }
+.section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 4rem; }
+.section-num { font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); opacity: 0.6; }
+.section-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -0.02em; color: var(--white); line-height: 1.1; }
+.section-title em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--gold); font-weight: 400; }
+
+/* ABOUT */
+#about { background: var(--surface); }
+.about-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; }
+.about-text p { font-size: 1rem; line-height: 1.85; color: var(--text); margin-bottom: 1.3rem; }
+.about-text p strong { color: var(--white); font-weight: 600; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+.chip { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); background: var(--gold-glow); border: 1px solid var(--gold-border); padding: 0.22rem 0.6rem; }
+.fact-table { display: flex; flex-direction: column; gap: 1px; background: var(--gold-border); }
+.fact-row { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 1.3rem; background: var(--surface2); transition: background 0.2s; }
+.fact-row:hover { background: #161929; }
+.fact-key { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); }
+.fact-val { font-size: 0.88rem; color: var(--white); font-weight: 500; text-align: right; }
+.fact-val.hi { color: var(--gold); font-family: 'Syne', sans-serif; font-weight: 700; }
+
+/* SKILLS */
+.skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--gold-border); }
+.skill-card { background: var(--bg); padding: 2.5rem 2rem; transition: background 0.3s; position: relative; overflow: hidden; }
+.skill-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold2), transparent); transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(.16,1,.3,1); }
+.skill-card:hover { background: var(--surface); }
+.skill-card:hover::after { transform: scaleX(1); }
+.skill-icon { font-size: 1.6rem; margin-bottom: 1.2rem; }
+.skill-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 1.2rem; letter-spacing: 0.02em; }
+.skill-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.skill-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; color: var(--grey2); }
+.skill-item::before { content: ''; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+
+/* EXPERIENCE */
+#experience { background: var(--surface); }
+.exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.exp-card { background: var(--bg); border: 1px solid var(--gold-border); padding: 2.5rem; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s; }
+.exp-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--gold-glow) 0%, transparent 55%); opacity: 0; transition: opacity 0.3s; }
+.exp-card:hover { border-color: rgba(212,168,67,0.4); transform: translateY(-3px); }
+.exp-card:hover::before { opacity: 1; }
+.exp-period { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.exp-role { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 0.3rem; }
+.exp-org { font-size: 0.82rem; color: var(--grey2); margin-bottom: 1.5rem; font-style: italic; }
+.exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.exp-bullets li { font-size: 0.83rem; line-height: 1.65; color: var(--grey2); padding-left: 1rem; position: relative; }
+.exp-bullets li::before { content: '›'; position: absolute; left: 0; color: var(--gold); font-size: 1rem; line-height: 1.5; }
+
+.edu-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+.edu-card { border: 1px solid var(--gold-border); padding: 2rem; background: var(--bg); display: flex; gap: 1.2rem; align-items: flex-start; transition: border-color 0.3s; }
+.edu-card:hover { border-color: rgba(212,168,67,0.4); }
+.edu-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.1rem; }
+.edu-degree { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--white); margin-bottom: 0.25rem; }
+.edu-school { font-size: 0.8rem; color: var(--grey2); margin-bottom: 0.6rem; }
+.edu-meta { font-size: 0.72rem; color: var(--gold); font-weight: 600; letter-spacing: 0.06em; }
+
+/* PROJECTS — 6 cards 3x2 grid */
+.projects-wrapper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--gold-border); }
+.project-tile { background: var(--bg); padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: background 0.3s; display: flex; flex-direction: column; }
+.project-tile:hover { background: var(--surface); }
+.project-num { font-family: 'Syne', sans-serif; font-size: 5rem; font-weight: 800; color: rgba(212,168,67,0.07); position: absolute; top: 0.5rem; right: 1rem; line-height: 1; pointer-events: none; transition: color 0.3s; }
+.project-tile:hover .project-num { color: rgba(212,168,67,0.13); }
+.project-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.project-name { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--white); margin-bottom: 1rem; line-height: 1.3; }
+.project-body { font-size: 0.82rem; line-height: 1.75; color: var(--grey2); flex: 1; }
+.project-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.5rem; }
+.p-chip { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold-border); padding: 0.18rem 0.55rem; background: var(--gold-glow); }
+
+/* CONTACT */
+#contact { background: var(--surface); }
+.contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.contact-headline { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--white); margin-bottom: 1.2rem; }
+.contact-headline em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--gold); font-weight: 400; }
+.contact-sub { font-size: 0.95rem; color: var(--grey2); line-height: 1.7; max-width: 420px; margin-bottom: 2rem; }
+.contact-links { display: flex; flex-direction: column; gap: 1px; background: var(--gold-border); }
+.contact-link { display: flex; align-items: center; gap: 1.2rem; padding: 1.4rem 1.6rem; background: var(--bg); text-decoration: none; transition: background 0.2s; }
+.contact-link:hover { background: var(--surface2); }
+.contact-link-icon { width: 38px; height: 38px; border: 1px solid var(--gold-border); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; transition: background 0.2s, border-color 0.2s; color: var(--gold); }
+.contact-link:hover .contact-link-icon { background: var(--gold-glow); border-color: var(--gold); }
+.contact-link-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); display: block; margin-bottom: 0.15rem; }
+.contact-link-val { font-size: 0.9rem; color: var(--white); font-weight: 500; }
+.contact-link:hover .contact-link-val { color: var(--gold); }
+
+footer { position: relative; z-index: 1; border-top: 1px solid var(--gold-border); padding: 1.6rem 3.5rem; display: flex; justify-content: space-between; align-items: center; }
+footer p { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.75s cubic-bezier(.16,1,.3,1), transform 0.75s cubic-bezier(.16,1,.3,1); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.05s; } .d2 { transition-delay: 0.15s; } .d3 { transition-delay: 0.25s; }
+
+@keyframes slideUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 1024px) {
+  #hero { grid-template-columns: 1fr; }
+  .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-center { display: none; }
+  #hero { padding: 6rem 1.5rem 4rem; }
+  .container { padding: 0 1.5rem; }
+  .skills-grid, .exp-grid, .edu-strip, .projects-wrapper { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 0.5rem; padding: 1.2rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">Durani <span>Blake</span></div>
+  <div class="nav-center">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+  </div>
+  <div class="nav-right">
+    <a href="https://github.com/duraniblake" target="_blank" class="nav-social" title="GitHub">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/durani-blake25" target="_blank" class="nav-social" title="LinkedIn" style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.72rem;">in</a>
+    <a href="#contact" class="nav-cta">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><span class="eyebrow-dot"></span> Finance &amp; Analytics Professional</div>
+    <h1 class="hero-name">Durani<br><em>Blake</em></h1>
+    <p class="hero-desc">MSc Finance · CFA Level I · Bloomberg Certified. I combine quantitative rigor with strategic investment thinking — from DCF models to large-scale financial datasets to portfolio management.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-gold">Get in Touch →</a>
+      <a href="#projects" class="btn-outline">View Work</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="metric-card">
+      <div class="metric-icon">📈</div>
+      <div class="metric-val">+18.4%</div>
+      <div class="metric-label">Excess Return</div>
+      <div class="metric-sub">Hedge Fund Simulation</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-val">3.44</div>
+      <div class="metric-label">Sharpe Ratio</div>
+      <div class="metric-sub">$250K Portfolio</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">🗄️</div>
+      <div class="metric-val">25yr</div>
+      <div class="metric-label">Dataset Built</div>
+      <div class="metric-sub">S&amp;P 1500 · 1999–2024</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon">📂</div>
+      <div class="metric-val">6</div>
+      <div class="metric-label">Projects</div>
+      <div class="metric-sub">Finance &amp; Engineering</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <span class="ticker-item">DCF Valuation <span class="t-dot">◆</span></span>
+    <span class="ticker-item">M&amp;A Analysis <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Derivatives Research <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Python · SQL <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Bloomberg Terminal <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Power BI <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Portfolio Management <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Capital Structure <span class="t-dot">◆</span></span>
+    <span class="ticker-item">CFA Level I <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Loan Structuring <span class="t-dot">◆</span></span>
+    <span class="ticker-item">LBO Modeling <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Financial Data Analytics <span class="t-dot">◆</span></span>
+    <span class="ticker-item">DCF Valuation <span class="t-dot">◆</span></span>
+    <span class="ticker-item">M&amp;A Analysis <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Derivatives Research <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Python · SQL <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Bloomberg Terminal <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Power BI <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Portfolio Management <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Capital Structure <span class="t-dot">◆</span></span>
+    <span class="ticker-item">CFA Level I <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Loan Structuring <span class="t-dot">◆</span></span>
+    <span class="ticker-item">LBO Modeling <span class="t-dot">◆</span></span>
+    <span class="ticker-item">Financial Data Analytics <span class="t-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-wrap">
+      <div class="section-header reveal">
+        <span class="section-num">01</span>
+        <h2 class="section-title">About <em>Me</em></h2>
+      </div>
+      <div class="about-layout">
+        <div class="about-text reveal d1">
+          <p>I'm a <strong>finance professional with a dual background in engineering and financial analysis</strong>, combining quantitative discipline with strategic investment thinking. I hold an MSc in Finance from Georgia State University's J. Mack Robinson College of Business and have passed the CFA Level I exam.</p>
+          <p>My career bridges two demanding disciplines: <strong>financial modeling and valuation</strong> from the finance world, and <strong>capital project analysis and infrastructure investment</strong> from years as an electrical engineer — giving me a uniquely analytical lens for evaluating risk, cash flows, and long-term value creation.</p>
+          <p>I thrive at the intersection of <strong>data, markets, and decision-making</strong> — building large-scale financial datasets, co-managing portfolios, and translating complex analysis into executive-ready insights.</p>
+          <div class="chip-row">
+            <span class="chip">MSc Finance</span>
+            <span class="chip">CFA Level I</span>
+            <span class="chip">Bloomberg Certified</span>
+            <span class="chip">GSU Robinson</span>
+          </div>
+        </div>
+        <div class="fact-table reveal d2">
+          <div class="fact-row"><span class="fact-key">Degree</span><span class="fact-val">MSc Finance, GPA 3.5</span></div>
+          <div class="fact-row"><span class="fact-key">University</span><span class="fact-val">Georgia State, Robinson</span></div>
+          <div class="fact-row"><span class="fact-key">CFA</span><span class="fact-val hi">Level I Passed</span></div>
+          <div class="fact-row"><span class="fact-key">Undergrad</span><span class="fact-val">BSc Electrical Engineering</span></div>
+          <div class="fact-row"><span class="fact-key">Sharpe Ratio</span><span class="fact-val hi">3.44</span></div>
+          <div class="fact-row"><span class="fact-key">Excess Return</span><span class="fact-val hi">+18.4%</span></div>
+          <div class="fact-row"><span class="fact-key">Location</span><span class="fact-val">Atlanta, GA</span></div>
+          <div class="fact-row"><span class="fact-key">Status</span><span class="fact-val hi">Open to Opportunities</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-wrap" style="padding-bottom: 2rem;">
+      <div class="section-header reveal">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Core <em>Expertise</em></h2>
+      </div>
+    </div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-icon">📊</div>
+      <div class="skill-name">Valuation &amp; Transactions</div>
+      <div class="skill-list">
+        <span class="skill-item">DCF Valuation</span>
+        <span class="skill-item">M&amp;A Fundamentals</span>
+        <span class="skill-item">Comparable Company Analysis</span>
+        <span class="skill-item">Precedent Transactions</span>
+        <span class="skill-item">Sensitivity &amp; Scenario Analysis</span>
+        <span class="skill-item">Capital Structure Analysis</span>
+        <span class="skill-item">Downside Risk Assessment</span>
+        <span class="skill-item">LBO Modeling Fundamentals</span>
+        <span class="skill-item">Exit Multiple Frameworks</span>
+        <span class="skill-item">Loan Structuring</span>
+      </div>
+    </div>
+    <div class="skill-card reveal d1">
+      <div class="skill-icon">📐</div>
+      <div class="skill-name">Financial Modeling</div>
+      <div class="skill-list">
+        <span class="skill-item">Cash Flow Forecasting</span>
+        <span class="skill-item">Pro Forma Modeling</span>
+        <span class="skill-item">NPV / IRR Analysis</span>
+        <span class="skill-item">Regression &amp; Logistic Analysis</span>
+        <span class="skill-item">Risk Exposure Modeling</span>
+        <span class="skill-item">Derivatives Research</span>
+        <span class="skill-item">Lifecycle Cost Analysis</span>
+        <span class="skill-item">Performance Attribution</span>
+        <span class="skill-item">Common-Size Analysis</span>
+      </div>
+    </div>
+    <div class="skill-card reveal d2">
+      <div class="skill-icon">🛠</div>
+      <div class="skill-name">Tools &amp; Technology</div>
+      <div class="skill-list">
+        <span class="skill-item">Bloomberg Terminal (BMC Certified)</span>
+        <span class="skill-item">Python — Pandas / NumPy</span>
+        <span class="skill-item">SQL</span>
+        <span class="skill-item">Excel — Advanced / VBA</span>
+        <span class="skill-item">Power BI</span>
+        <span class="skill-item">Tableau</span>
+        <span class="skill-item">PowerWorld Simulator</span>
+      </div>
+    </div>
+  </div>
+  <div style="padding-bottom: 5rem;"></div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="section-wrap">
+      <div class="section-header reveal">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Work <em>Experience</em></h2>
+      </div>
+      <div class="exp-grid">
+        <div class="exp-card reveal">
+          <div class="exp-period">Aug 2024 – Dec 2025</div>
+          <div class="exp-role">Graduate Research Assistant</div>
+          <div class="exp-org">Georgia State University — Finance Dept · Atlanta, GA</div>
+          <ul class="exp-bullets">
+            <li>Built and managed a 25-year financial dataset (S&amp;P 1500, 1999–2024) using Python and SQL for large-scale research on capital structure and risk exposure.</li>
+            <li>Developed DCF, regression, and risk-exposure models evaluating cash-flow durability, leverage, and long-term value creation.</li>
+            <li>Designed Power BI dashboards translating complex financial research into actionable insights for senior stakeholders.</li>
+          </ul>
+        </div>
+        <div class="exp-card reveal d1">
+          <div class="exp-period">Jan 2021 – Dec 2023</div>
+          <div class="exp-role">Electrical Engineer</div>
+          <div class="exp-org">General Electrical Contractors Ltd. · Kingston, Jamaica</div>
+          <ul class="exp-bullets">
+            <li>Led technical and financial evaluation of 15+ energy &amp; solar projects (~$2M) with ROI/NPV/IRR modeling to inform capital allocation decisions.</li>
+            <li>Performed lifecycle cost analysis and asset replacement modeling, reducing operating costs by 20%.</li>
+            <li>Presented technical-financial recommendations to C-suite, translating engineering metrics into strategic investment narratives.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="section-header reveal" style="margin-top:4rem;">
+        <span class="section-num">↳</span>
+        <h3 class="section-title" style="font-size:1.8rem;">Education</h3>
+      </div>
+      <div class="edu-strip">
+        <div class="edu-card reveal">
+          <div class="edu-icon">🎓</div>
+          <div>
+            <div class="edu-degree">Master of Science in Finance</div>
+            <div class="edu-school">Georgia State University, J. Mack Robinson College of Business · Atlanta, GA</div>
+            <div class="edu-meta">GPA 3.5 · CFA Level I Passed · Dec 2025</div>
+          </div>
+        </div>
+        <div class="edu-card reveal d1">
+          <div class="edu-icon">⚡</div>
+          <div>
+            <div class="edu-degree">BSc. Electrical Power Engineering</div>
+            <div class="edu-school">University of the West Indies, Mona · Kingston, Jamaica</div>
+            <div class="edu-meta">Renewable Energy · Power Systems · Nov 2021</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS — 6 cards -->
+<section id="projects">
+  <div class="container">
+    <div class="section-wrap" style="padding-bottom: 2rem;">
+      <div class="section-header reveal">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Selected <em>Projects</em></h2>
+      </div>
+    </div>
+  </div>
+  <div class="projects-wrapper">
+
+    <!-- 01 -->
+    <div class="project-tile reveal">
+      <div class="project-num">01</div>
+      <div class="project-tag">Portfolio Management · GSU</div>
+      <div class="project-name">Hedge Fund Management Simulation</div>
+      <div class="project-body">Co-managed a $250K multi-asset portfolio achieving an 18.4% excess return with a Sharpe Ratio of 3.44 through disciplined risk assessment, performance attribution, and strategic capital allocation across market cycles.</div>
+      <div class="project-chips">
+        <span class="p-chip">Sharpe 3.44</span>
+        <span class="p-chip">+18.4% Excess Return</span>
+        <span class="p-chip">Multi-Asset</span>
+        <span class="p-chip">Risk Attribution</span>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="project-tile reveal d1">
+      <div class="project-num">02</div>
+      <div class="project-tag">Investment Banking · Forage / BofA</div>
+      <div class="project-name">Bank of America IB Simulation</div>
+      <div class="project-body">Evaluated acquisition viability via full DCF valuation, sensitivity &amp; scenario analysis, and exit multiple frameworks. Synthesized findings into a 10-slide investment committee deck covering key risks, growth drivers, and transaction tradeoffs.</div>
+      <div class="project-chips">
+        <span class="p-chip">DCF</span>
+        <span class="p-chip">M&amp;A</span>
+        <span class="p-chip">Sensitivity Analysis</span>
+        <span class="p-chip">Investment Committee</span>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="project-tile reveal d2">
+      <div class="project-num">03</div>
+      <div class="project-tag">Data Analytics · FI 8200 · GSU</div>
+      <div class="project-name">Corporate Derivatives Usage — Longitudinal Analysis</div>
+      <div class="project-body">Analyzed how U.S. non-financial firms (S&amp;P 1500) evolved their derivative strategies from 1999–2023. Built a cleaned panel dataset, ran logistic regressions, and delivered 12 exhibits covering time-series trends, industry cross-sections, and strategic implications for CFOs and regulators. Derivative adoption rose from 31.5% to 46.2% over the study period; total notional exposure reached $2.4 trillion in 2023.</div>
+      <div class="project-chips">
+        <span class="p-chip">Python</span>
+        <span class="p-chip">Logistic Regression</span>
+        <span class="p-chip">S&amp;P 1500</span>
+        <span class="p-chip">Panel Data</span>
+        <span class="p-chip">FX / IR / Commodity</span>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="project-tile reveal">
+      <div class="project-num">04</div>
+      <div class="project-tag">Financial Analysis &amp; Loan Structuring · FI 8020 · GSU</div>
+      <div class="project-name">Coty Inc. — Comprehensive Credit &amp; Valuation Report</div>
+      <div class="project-body">Produced a full financial analysis of Coty Inc. (2021–2024) covering common-size income statements, key ratios (liquidity, leverage, coverage, efficiency), cash flow analysis, earnings management review, and a market-approach valuation. Applied a 15× EV/EBITDA multiple to estimate enterprise value of $10.07B and equity value of $6.20B. Issued a cautious "Hold" recommendation supported by ratio trend analysis and risk assessment.</div>
+      <div class="project-chips">
+        <span class="p-chip">EV/EBITDA</span>
+        <span class="p-chip">Credit Analysis</span>
+        <span class="p-chip">Ratio Analysis</span>
+        <span class="p-chip">Earnings Mgmt</span>
+        <span class="p-chip">Cash Flow</span>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="project-tile reveal d1">
+      <div class="project-num">05</div>
+      <div class="project-tag">Engineering Capstone · UWI Mona</div>
+      <div class="project-name">UWI Power Grid Improvement — Smart Grid Study</div>
+      <div class="project-body">Investigated and modeled the University of the West Indies' 7MW campus power grid using PowerWorld Simulator. Conducted fault analysis (single-line-to-ground and three-phase faults), transient stability assessment, and load flow analysis. Recommended SCADA integration, PMU deployment, and smart grid upgrades — reducing voltage deviations by 20% and improving reliability across the campus grid.</div>
+      <div class="project-chips">
+        <span class="p-chip">PowerWorld</span>
+        <span class="p-chip">SCADA</span>
+        <span class="p-chip">Fault Analysis</span>
+        <span class="p-chip">Transient Stability</span>
+        <span class="p-chip">Smart Grid</span>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="project-tile reveal d2">
+      <div class="project-num">06</div>
+      <div class="project-tag">Capital Investment · Engineering</div>
+      <div class="project-name">Solar &amp; Energy Infrastructure — ROI/NPV/IRR Analysis</div>
+      <div class="project-body">Led technical and financial evaluation of 15+ renewable energy and solar projects (~$2M total) at General Electrical Contractors Ltd. Combined grid integration assessments, system design analysis, and rigorous NPV/IRR/ROI modeling to support go/no-go capital allocation decisions. Lifecycle cost modeling and asset replacement analysis reduced operating expenses by 20%.</div>
+      <div class="project-chips">
+        <span class="p-chip">NPV / IRR</span>
+        <span class="p-chip">Capital Allocation</span>
+        <span class="p-chip">Renewable Energy</span>
+        <span class="p-chip">−20% OpEx</span>
+      </div>
+    </div>
+
+  </div>
+  <div style="padding-bottom: 5rem;"></div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-wrap">
+      <div class="contact-layout">
+        <div class="reveal">
+          <div class="contact-headline">Let's <em>Work</em><br>Together</div>
+          <p class="contact-sub">Open to finance roles in investment banking, asset management, financial analytics, and related fields. I'd love to connect and discuss how I can add value to your team.</p>
+          <a href="mailto:duraniblake@gmail.com" class="btn-gold">Send Email →</a>
+        </div>
+        <div class="contact-links reveal d1">
+          <a href="mailto:duraniblake@gmail.com" class="contact-link">
+            <div class="contact-link-icon">✉</div>
+            <div><span class="contact-link-label">Email</span><span class="contact-link-val">duraniblake@gmail.com</span></div>
+          </a>
+          <a href="tel:7705600312" class="contact-link">
+            <div class="contact-link-icon">📞</div>
+            <div><span class="contact-link-label">Phone</span><span class="contact-link-val">770-560-0312</span></div>
+          </a>
+          <a href="https://www.linkedin.com/in/durani-blake25" target="_blank" class="contact-link">
+            <div class="contact-link-icon" style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.75rem;">in</div>
+            <div><span class="contact-link-label">LinkedIn</span><span class="contact-link-val">durani-blake25</span></div>
+          </a>
+          <a href="https://github.com/duraniblake" target="_blank" class="contact-link">
+            <div class="contact-link-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div><span class="contact-link-label">GitHub</span><span class="contact-link-val">github.com/duraniblake</span></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Durani Blake</p>
+  <p>MSc Finance · CFA Level I · Atlanta, GA</p>
+</footer>
+
+<script>
+// Custom cursor
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a').forEach(a => {
+  a.addEventListener('mouseenter', () => { cur.style.width='16px'; cur.style.height='16px'; ring.style.width='52px'; ring.style.height='52px'; ring.style.borderColor='var(--gold)'; });
+  a.addEventListener('mouseleave', () => { cur.style.width='10px'; cur.style.height='10px'; ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='rgba(212,168,67,0.5)'; });
+});
+
+// Animated particle canvas
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, pts = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+class P {
+  constructor() { this.init(); }
+  init() { this.x=Math.random()*W; this.y=Math.random()*H; this.vx=(Math.random()-.5)*.2; this.vy=(Math.random()-.5)*.2; this.r=Math.random()*1.1+.2; this.a=Math.random()*.3+.05; }
+  tick() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W||this.y<0||this.y>H) this.init(); }
+  draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(212,168,67,${this.a})`; ctx.fill(); }
+}
+for(let i=0;i<80;i++) pts.push(new P());
+function frame() {
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<pts.length;i++){
+    pts[i].tick(); pts[i].draw();
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<110){ ctx.beginPath(); ctx.strokeStyle=`rgba(212,168,67,${0.07*(1-d/110)})`; ctx.lineWidth=.5; ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y); ctx.stroke(); }
+    }
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+
+// Scroll reveal
+const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);} }), {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
